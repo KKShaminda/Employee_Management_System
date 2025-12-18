@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const StatusBadge = ({ status }) => {
+  const base = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium'
+  if (status === 'Approved') return <span className={`${base} bg-green-100 text-green-800`}>Approved</span>
+  if (status === 'Rejected') return <span className={`${base} bg-red-100 text-red-800`}>Rejected</span>
+  return <span className={`${base} bg-yellow-100 text-yellow-800`}>Pending</span>
+}
+
 const AdminDashboard = () => {
   const [leaves, setLeaves] = useState([])
   const [loading, setLoading] = useState(true)
@@ -85,37 +92,43 @@ const AdminDashboard = () => {
           </form>
         </section>
 
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Range</th>
-              <th>Days</th>
-              <th>Reason</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaves.map(l => (
-              <tr key={l._id} className="border-t">
-                <td>{l.user?.name ?? l.user?.email}</td>
-                <td>{new Date(l.startDate).toLocaleDateString()} - {new Date(l.endDate).toLocaleDateString()}</td>
-                <td>{l.totalDays}</td>
-                <td>{l.reason}</td>
-                <td>{l.status}</td>
-                <td>
-                  {l.status === 'Pending' && (
-                    <>
-                      <button onClick={() => updateStatus(l._id, 'Approved')} className="mr-2 px-2 py-1 bg-green-500 text-white rounded">Approve</button>
-                      <button onClick={() => updateStatus(l._id, 'Rejected')} className="px-2 py-1 bg-red-500 text-white rounded">Reject</button>
-                    </>
-                  )}
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full divide-y divide-gray-200 bg-white rounded">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Range</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-100">
+              {leaves.map((l, idx) => (
+                <tr key={l._id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <td className="px-4 py-3 text-sm text-gray-700">{l.user?.name ?? l.user?.email}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">{new Date(l.startDate).toLocaleDateString()} — {new Date(l.endDate).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700">{l.totalDays}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700 max-w-xs truncate">{l.reason}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={l.status} />
+                  </td>
+                  <td className="px-4 py-3">
+                    {l.status === 'Pending' ? (
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => updateStatus(l._id, 'Approved')} className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-full text-sm">Approve</button>
+                        <button onClick={() => updateStatus(l._id, 'Rejected')} className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-full text-sm">Reject</button>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-500">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
