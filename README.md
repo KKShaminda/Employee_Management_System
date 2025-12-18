@@ -6,6 +6,7 @@ Prerequisites
 
 1) Environment
 - Create a `.env` file in `server/` with at least:
+  - PORT =3000
   - MONGO_URI=<your-mongo-uri>
   - JWT_SECRET=<strong-secret>
 
@@ -30,8 +31,8 @@ node --env-file=.env userSeed.js
 ```
 
 Default credentials created (if not change)
-- Email: admin@example.com
-- Password: Admin@123
+- Email: admin@gmail.com
+- Password: admin123
 - Role: Admin
 
 4) Start servers
