@@ -1,8 +1,16 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/login';
+import AdminDashboard from './pages/AdminDashboard'; 
+
 function App() {
   return (
-    <>
-      <h1 class="text-3xl font-bold underline">Hello world!</h1>
-    </>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Navigate to="/admin-dashboard" replace />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/admin-dashboard' element={<AdminDashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
